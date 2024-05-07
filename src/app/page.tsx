@@ -11,7 +11,8 @@ async function getPlayers() {
 }
 
 export default async function Home() {
-  const [boardNumber, setBoardNumber] = useState(0);
+  const [boardPointer, setBoardPointer] = useState(0);
+  const [playerPointer, setPlayerPointer] = useState(0);
   const players = await getPlayers();
   return (
     <div className="flex flex-row">
@@ -19,11 +20,13 @@ export default async function Home() {
         <div className="">Court div</div>
         <div>
           <div className="bg-rose-300 p-5">
-            <div className="flex gap-2 p-1">
-              <div className="border-2 rounded-md">
+            <div className="grid grid-rows-12 grid-cols-4 *:border-2 *:rounded-md gap-2">
+              <div className="">
                 <PlayerCard></PlayerCard>
               </div>
-              <div></div>
+              <div>
+                <PlayerCard></PlayerCard>
+              </div>
               <div></div>
               <div></div>
             </div>
