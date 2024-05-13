@@ -17,7 +17,28 @@ export default async function Home() {
   return (
     <div className="flex flex-row">
       <div className="w-1/2">
-        <div className="">Court div</div>
+        <div className="bg-green-400 p-5">
+          <div className="grid grid-cols-4 grid-rows-4 *:border-2 *:rounded-md gap-2 ">
+            <div>
+              <PlayerCard></PlayerCard>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
         <div>
           <div className="bg-rose-300 p-5">
             <div className="grid grid-rows-12 grid-cols-4 *:border-2 *:rounded-md gap-2">
@@ -27,6 +48,47 @@ export default async function Home() {
               <div>
                 <PlayerCard></PlayerCard>
               </div>
+
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
               <div></div>
               <div></div>
             </div>
