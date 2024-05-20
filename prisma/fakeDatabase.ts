@@ -1,0 +1,15 @@
+export const playerList = [
+    {name: "이용대", age: 30, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/4011421e-caf3-40e8-4df5-fffa4655e800/avatar"},
+    {name: "유연성", age: 40, grade: "S", id:2, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/45cdb569-ca0d-487e-d173-138e30feb700/avatar"},
+    {name: "고성현", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/9d994751-691e-4442-6bfb-9d6e263b6b00/avatar"},
+    {name: "안세영", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/47d117c0-37d3-4adb-8be7-f42e9f168a00/avatar"},
+    {name: "신두", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/8fb1e7e9-6932-4c3d-2cac-4a9e8a55bf00/avatar"},
+    {name: "폴리", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/705578c6-35da-4fc8-8587-4d29159d6d00/avatar"},
+    {name: "공희용", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/fd553ff7-1d93-4e2a-2fa7-fe66bcbc6f00/avatar"},
+    {name: "박주봉", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/50bf44a2-ae1b-4514-caae-d5303141f400/avatar"},
+    {name: "이소희", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/7a7815ec-9134-4049-9aed-ced8e4981400/avatar"},
+    {name: "김사랑", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/036ca144-2396-4bbc-5945-be7829f4e100/avatar"},
+    {name: "모정건", age: 40, grade: "A", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/1d8860ff-6389-4d12-4a0f-fdcde670de00/avatar"},
+    {name: "첸유페이", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/523e3e4e-b898-4909-8335-b413eaefda00/avatar"},
+    {name: "신승찬", age: 20, grade: "S", id:1, avatar: "https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/4c5fd246-a118-4b7f-f83b-38af00f20900/avatar"},
+];
