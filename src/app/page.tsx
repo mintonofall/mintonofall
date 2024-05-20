@@ -4,8 +4,10 @@ import Image from "next/image";
 import PlayerCard from "./PlayerCard";
 import { useState } from "react";
 import Link from "next/link";
+import db from "../../lib/db";
 import CreatePlayer from "./createPlayer";
 import { playerList } from "../../prisma/fakeDatabase";
+import { inPutData } from "./inputData";
 
 export default function Home() {
   const [boardPointer, setBoardPointer] = useState(0);
@@ -16,14 +18,20 @@ export default function Home() {
       <div className="lg:w-1/2">
         <div className="flex bg-green-400 p-5">
           <div className="grid grid-rows-4 grid-cols-1 w-20">
-            <button>+</button>
+            <button onClick={inPutData}>+1</button>
             <button>+</button>
             <button>+</button>
             <button>+</button>
           </div>
           <div className="grid grid-cols-4 grid-rows-4 *:border-2 *:rounded-md gap-2 w-full">
             <div>
-              <PlayerCard></PlayerCard>
+              <PlayerCard
+                name={playerList[0].name}
+                age={30}
+                grade={"A"}
+                avatar=""
+                gameCount={3}
+              ></PlayerCard>
             </div>
             <div></div>
             <div></div>
@@ -59,10 +67,22 @@ export default function Home() {
             </div>
             <div className="grid grid-rows-12 grid-cols-4 *:border-2 *:rounded-md gap-2 w-full">
               <div className="">
-                <PlayerCard></PlayerCard>
+                <PlayerCard
+                  name={playerList[0].name}
+                  age={30}
+                  grade={"A"}
+                  avatar=""
+                  gameCount={3}
+                ></PlayerCard>
               </div>
               <div>
-                <PlayerCard></PlayerCard>
+                <PlayerCard
+                  name={playerList[0].name}
+                  age={30}
+                  grade={"A"}
+                  avatar=""
+                  gameCount={3}
+                ></PlayerCard>
               </div>
 
               <div></div>
