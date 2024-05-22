@@ -15,25 +15,10 @@ async function getInitialPlayers() {
 }
 
 export default function Home() {
+  const players = playerList;
   const [boardPointer, setBoardPointer] = useState(0);
   const [playerPointer, setPlayerPointer] = useState(0);
-  const [players, setPlayers] = useState<
-    {
-      id: number;
-      name: string;
-      avatar: string | null;
-      age: number | null;
-      grade: string | null;
-      mmr: number;
-      clubId: number | null;
-      createdAt: Date;
-      updatedAt: Date;
-    }[]
-  >([]);
   const [showCreatePlayer, setShowCreatePlayer] = useState(false);
-  useEffect(() => {
-    getInitialPlayers().then((players) => setPlayers(players));
-  }, []);
 
   return (
     <div className="flex flex-row">

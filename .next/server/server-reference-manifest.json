@@ -7,16 +7,8 @@
       "layer": {
         "app/page": "action-browser"
       }
-    },
-    "1c145623018165d2b2238ac71e362826dcadec51": {
-      "workers": {
-        "app/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fiotofall%2FDesktop%2Fmintonofall2024%2Fsrc%2Fapp%2FnewPlayer.ts%22%2C%5B%22newPlayer%22%5D%5D%5D&__client_imported__=true!"
-      },
-      "layer": {
-        "app/page": "action-browser"
-      }
     }
   },
   "edge": {},
-  "encryptionKey": "wZyzwgLb86h9/9Noqvlq/+pMA9u1z/Ivy+hZfg6uWzM="
+  "encryptionKey": "adcFAkzUjS9Mje5TiJQDwDMzCYVz/9741FoqTJcbZro="
 }
