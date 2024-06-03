@@ -7,6 +7,9 @@ import Link from "next/link";
 import db from "../../lib/db";
 import CreatePlayer from "./createPlayer";
 import { playerList } from "../../prisma/fakeDatabase";
+import { Player } from "@/model/model";
+import { platform } from "process";
+import { Play } from "next/font/google";
 
 async function getInitialPlayers() {
   const players = await db.player.findMany();
@@ -15,10 +18,23 @@ async function getInitialPlayers() {
 }
 
 export default function Home() {
-  const [boardPointer, setBoardPointer] = useState(0);
-  const [playerPointer, setPlayerPointer] = useState(0);
+  const [PlayerArray, setPlayerArray] = useState<Array<Player>>(
+    Array.from({ length: 48 })
+  ); // [player1, player2, player3, player4]
   const [showCreatePlayer, setShowCreatePlayer] = useState(false);
   const [players, setPlayers] = useState([]);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player>({
+    name: "",
+    age: 0,
+    grade: "",
+    gameCount: 0,
+    avatar: "",
+  });
+  const seletPlayer = (index: number) => {
+    const newArray = [...PlayerArray];
+    newArray[index] = selectedPlayer;
+    setPlayerArray(newArray); // Fix: Assign selectedPlayer to newPlayerArray at the specified index
+  };
 
   useEffect(() => {
     fetch("/www/players")
@@ -28,74 +44,82 @@ export default function Home() {
 
   return (
     <div className="flex flex-row">
-      <div className="lg:w-1/2">
+      <div className="lg:w-2/3">
         <div className="flex bg-green-400 p-5">
           <div className="grid grid-rows-4 grid-cols-1 w-20">
-            <button>+</button>
-            <button>+</button>
-            <button>+</button>
-            <button>+</button>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <button key={index}>+</button>
+            ))}
           </div>
           <div className="grid grid-cols-4 grid-rows-4 *:border-2 *:rounded-md gap-2 w-full">
-            <div key={"A"}>
-              <PlayerCard
-                name={"aaa"}
-                age={30}
-                grade={"A"}
-                avatar=""
-                gameCount={3}
-              ></PlayerCard>
-            </div>
+            {Array.from({ length: 16 }).map((_, index) => (
+              <div key={index}>
+                {PlayerArray[index] ? (
+                  <PlayerCard
+                    name={PlayerArray[index].name}
+                    age={PlayerArray[index].age}
+                    grade={PlayerArray[index].grade}
+                    avatar={PlayerArray[index].avatar}
+                    gameCount={PlayerArray[index].gameCount}
+                  ></PlayerCard>
+                ) : (
+                  <PlayerCard
+                    name="선수이름"
+                    age={0}
+                    grade=""
+                    avatar="https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/54f8e178-686c-4184-811c-eeb72f96ba00/avatar"
+                    gameCount={0}
+                  ></PlayerCard>
+                )}
+              </div>
+            ))}
           </div>
         </div>
         <div>
           <div className="flex bg-rose-300 p-5">
             <div className="grid grid-rows-12 grid-cols-1 w-20">
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
-              <button>+</button>
+              {Array.from({ length: 12 }).map((_, index) => (
+                <button key={index}>+</button>
+              ))}
             </div>
             <div className="grid grid-rows-12 grid-cols-4 *:border-2 *:rounded-md gap-2 w-full">
-              <div className="">
-                <PlayerCard
-                  name={playerList[0].name}
-                  age={30}
-                  grade={"A"}
-                  avatar=""
-                  gameCount={3}
-                ></PlayerCard>
-              </div>
-              <div>
-                <PlayerCard
-                  name={playerList[0].name}
-                  age={30}
-                  grade={"A"}
-                  avatar=""
-                  gameCount={3}
-                ></PlayerCard>
-              </div>
+              {Array.from({ length: 48 }).map((_, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    seletPlayer(index);
+                  }}
+                >
+                  {PlayerArray[index] ? (
+                    <PlayerCard
+                      name={PlayerArray[index].name}
+                      age={PlayerArray[index].age}
+                      grade={PlayerArray[index].grade}
+                      avatar={PlayerArray[index].avatar}
+                      gameCount={PlayerArray[index].gameCount}
+                    ></PlayerCard>
+                  ) : null}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
-      <div className="lg:w-1/2">
+      <div className="lg:w-1/3">
         <div>
           <form>
             <input placeholder="이름 혹은 전화번호 네자리"></input>
             <button>참가</button>
           </form>
           <div>
-            {players.map((player: any) => {
+            {players.map((player: Player, idx) => {
               return (
-                <div key={player.name}>
+                <div
+                  key={idx}
+                  onClick={() => {
+                    setSelectedPlayer(player); // Fix: Use setSelectedPlayer instead of selectedPlayer
+                  }}
+                >
                   <PlayerCard
                     name={player.name}
                     age={player.age}
@@ -106,13 +130,6 @@ export default function Home() {
                 </div>
               );
             })}
-            <PlayerCard
-              name={playerList[0].name}
-              age={30}
-              grade="S"
-              gameCount={4}
-              avatar="https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/4011421e-caf3-40e8-4df5-fffa4655e800/avatar"
-            />
           </div>
           <Link href={"createPlayer"}>선수추가</Link>
           <div></div>
