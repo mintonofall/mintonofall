@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import PlayerCard from "./PlayerCard";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import db from "../../lib/db";
 import CreatePlayer from "./createPlayer";
@@ -12,7 +12,7 @@ import { platform } from "process";
 import { Play } from "next/font/google";
 
 async function getInitialPlayers() {
-  const players = await db.player.findMany();
+  const players = await db.watingPlayer.findMany();
   console.log("client side players: ", players);
   return players;
 }
@@ -22,7 +22,12 @@ export default function Home() {
     Array.from({ length: 48 })
   ); // [player1, player2, player3, player4]
   const [showCreatePlayer, setShowCreatePlayer] = useState(false);
-  const [players, setPlayers] = useState([]);
+  const [showInputPlayer, setShowInputPlayer] = useState([]);
+  const [inputPlayer, setInputPlayer] = useState("");
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [PlayingGame, setPlayingGame] = useState<Player[]>(
+    Array.from({ length: 16 })
+  );
   const [selectedPlayer, setSelectedPlayer] = useState<Player>({
     name: "",
     age: 0,
@@ -36,6 +41,12 @@ export default function Home() {
     setPlayerArray(newArray); // Fix: Assign selectedPlayer to newPlayerArray at the specified index
   };
 
+  const handlePlayerClick = (player: Player) => {
+    const newArray = [...players];
+    newArray.push(player);
+    setPlayers(newArray);
+  };
+
   useEffect(() => {
     fetch("/www/players")
       .then((response) => response.json())
@@ -43,8 +54,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-row">
-      <div className="lg:w-2/3">
+    <div className="flex  flex-row">
+      <div className="overflow-x-scroll lg:w-2/3">
         <div className="flex bg-green-400 p-5">
           <div className="grid grid-rows-4 grid-cols-1 w-20">
             {Array.from({ length: 4 }).map((_, index) => (
@@ -105,10 +116,24 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="lg:w-1/3">
+      <div className="overflow-x-scroll lg:w-1/3">
         <div>
           <form>
-            <input placeholder="이름 혹은 전화번호 네자리"></input>
+            <input
+              onChange={async (e) => {
+                setInputPlayer(e.target.value);
+                fetch("/www/findPlayers", {
+                  method: "POST",
+                  body: JSON.stringify({ name: inputPlayer }),
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    setShowInputPlayer(data);
+                    console.log("show is ", showInputPlayer);
+                  });
+              }}
+              placeholder="이름 혹은 전화번호 네자리"
+            ></input>
             <button>참가</button>
           </form>
           <div>
@@ -144,6 +169,27 @@ export default function Home() {
             <CreatePlayer />
           </div>
         </div>
+      </div>
+      <div className={inputPlayer == "" ? "hidden" : ""}>
+        {showInputPlayer.map((player: Player, idx) => {
+          return (
+            <div
+              onClick={() => {
+                handlePlayerClick(player);
+                console.log("selected player is ", player);
+              }}
+            >
+              <PlayerCard
+                name={player.name}
+                age={player.age}
+                grade={player.grade}
+                gameCount={0}
+                avatar={player.avatar}
+              />
+            </div>
+          );
+        })}
+        test
       </div>
     </div>
   );

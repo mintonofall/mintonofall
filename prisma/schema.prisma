@@ -15,10 +15,20 @@ datasource db {
 
 model WatingPlayer {
   id           Int      @id @default(autoincrement())
+  place        Int
   playerId     Int?
   watingPlayer Player?  @relation(fields: [playerId], references: [id])
+  clubId       Int?
+  club         Club?    @relation(fields: [clubId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model PlayingGames {
+  id          Int      @id @default(autoincrement())
+  courtNumber Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Player {
@@ -36,11 +46,12 @@ model Player {
 }
 
 model Club {
-  id        Int      @id @default(autoincrement())
-  name      String
-  players   Player[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             Int            @id @default(autoincrement())
+  name           String
+  players        Player[]
+  WaitingPlayers WatingPlayer[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 model Record {

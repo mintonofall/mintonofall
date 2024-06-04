@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "WatingPlayer" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "playerId" INTEGER,
+    "clubId" INTEGER,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "WatingPlayer_playerId_fkey" FOREIGN KEY ("playerId") REFERENCES "Player" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "WatingPlayer_clubId_fkey" FOREIGN KEY ("clubId") REFERENCES "Club" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);

@@ -1,0 +1,7 @@
+-- CreateTable
+CREATE TABLE "PlayingGames" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "courtNumber" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
