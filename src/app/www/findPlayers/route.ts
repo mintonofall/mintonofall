@@ -4,7 +4,7 @@ import { playerList } from "../../../../prisma/fakeDatabase";
 import { stringify } from "querystring";
 export async function POST(req: NextRequest) {
     const data = await req.json();
-    const players = await db.player.findMany({ where: { name: { contains: data.name } }, select: { name:true, grade:true,avatar:true, age:true } });
+    const players = await db.player.findMany({ where: { name: { contains: data.name } }, select: { name:true, grade:true,avatar:true, age:true,id:true, clubId:true } });
     // const players = playerList;
     if(!players) {
         return Response.json({ message: 'Player not found' });

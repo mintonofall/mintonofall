@@ -1,9 +1,13 @@
 export interface Player {
+    id: number;
     name: string;
-    age: number;
+    age?: number;
     grade: string;
-    gameCount: number;
+    gameCount?: number;
     avatar: string;
+    clubId: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface WatingPlayer {
@@ -24,3 +28,11 @@ export interface Club {
     Members:Player[];
     
 }
+
+export interface SendData {
+    playerId:number | null;
+    place:number;
+    clubId:number;
+}
+
+export interface PlayerWithPlace extends Player { place: number; }

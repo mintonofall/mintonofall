@@ -34,15 +34,16 @@ model PlayingGames {
 model Player {
   id            Int            @id @default(autoincrement())
   name          String
-  avatar        String?
-  age           Int?
-  grade         String?
+  avatar        String         @default("https://imagedelivery.net/H_vtnjYSM5axKm4PivHM5g/54f8e178-686c-4184-811c-eeb72f96ba00/avatar")
+  age           Int            @default(0)
+  grade         String         @default("X")
   mmr           Int            @default(1000)
-  club          Club?          @relation(fields: [clubId], references: [id])
-  clubId        Int?
+  club          Club           @relation(fields: [clubId], references: [id])
+  clubId        Int            @default(1)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   watingPlayers WatingPlayer[]
+  waitingBoards WatingBoard[]
 }
 
 model Club {
@@ -50,6 +51,7 @@ model Club {
   name           String
   players        Player[]
   WaitingPlayers WatingPlayer[]
+  waitingBoards  WatingBoard[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 }
@@ -60,4 +62,15 @@ model Record {
   updatedAt DateTime @updatedAt
   winnerId  Int
   loserId   Int
+}
+
+model WatingBoard {
+  id           Int      @id @default(autoincrement())
+  place        Int
+  playerId     Int?
+  watingPlayer Player?  @relation(fields: [playerId], references: [id])
+  clubId       Int?
+  club         Club?    @relation(fields: [clubId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

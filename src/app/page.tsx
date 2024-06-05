@@ -7,7 +7,7 @@ import Link from "next/link";
 import db from "../../lib/db";
 import CreatePlayer from "./createPlayer";
 import { playerList } from "../../prisma/fakeDatabase";
-import { Player } from "@/model/model";
+import { Player, SendData } from "@/model/model";
 import { platform } from "process";
 import { Play } from "next/font/google";
 
@@ -20,7 +20,10 @@ async function getInitialPlayers() {
 export default function Home() {
   const [PlayerArray, setPlayerArray] = useState<Array<Player>>(
     Array.from({ length: 48 })
-  ); // [player1, player2, player3, player4]
+  );
+  // const [PlayerArray, setPlayerArray] = useState<Array<Player>>(
+  //  () => JSON.parse(localStorage.getItem('PlayerArray')) || Array.from({ length: 48 })
+  // ); // [player1, player2, player3, player4]
   const [showCreatePlayer, setShowCreatePlayer] = useState(false);
   const [showInputPlayer, setShowInputPlayer] = useState([]);
   const [inputPlayer, setInputPlayer] = useState("");
@@ -29,29 +32,82 @@ export default function Home() {
     Array.from({ length: 16 })
   );
   const [selectedPlayer, setSelectedPlayer] = useState<Player>({
+    id: 0,
     name: "",
     age: 0,
     grade: "",
     gameCount: 0,
     avatar: "",
+    clubId: 0,
   });
-  const seletPlayer = (index: number) => {
+  const seletPlayer = async (index: number) => {
     const newArray = [...PlayerArray];
     newArray[index] = selectedPlayer;
-    setPlayerArray(newArray); // Fix: Assign selectedPlayer to newPlayerArray at the specified index
+    await setPlayerArray(newArray);
   };
 
   const handlePlayerClick = (player: Player) => {
-    const newArray = [...players];
-    newArray.push(player);
-    setPlayers(newArray);
+    fetch("/www/selectedPlayers", {
+      method: "POST",
+      body: JSON.stringify({ playerId: player.id, clubId: player.clubId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("res data is ", data);
+        setPlayers(data);
+        // Handle the response data here
+      })
+      .catch((error) => {
+        // Handle any errors here
+      });
   };
 
   useEffect(() => {
     fetch("/www/players")
       .then((response) => response.json())
-      .then((data) => setPlayers(data));
+      .then((data) => {
+        setPlayers(data);
+      });
+    fetch("/www/watingBoard")
+      .then((response) => response.json())
+      .then((data) => {});
   }, []);
+
+  useEffect(() => {
+    const sendData: SendData[] = [];
+    PlayerArray.map((player, idx) => {
+      if (!player) {
+        const data = {
+          place: idx,
+          clubId: 1,
+          playerId: null,
+        };
+        sendData.push(data);
+      } else {
+        const data = {
+          playerId: player.id,
+          place: idx,
+          clubId: player?.clubId,
+        };
+        sendData.push(data);
+      }
+    });
+    console.log("sendData is ", sendData);
+    fetch("/www/watingBoard", {
+      method: "POST",
+      body: JSON.stringify(sendData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("res data is ", data);
+        // Handle the response data here
+      })
+      .catch((error) => {
+        console.log("error is ", error);
+        // Handle any errors here
+      });
+    localStorage.setItem("PlayerArray", JSON.stringify(PlayerArray));
+  }, [PlayerArray]);
 
   return (
     <div className="flex  flex-row">
@@ -67,11 +123,11 @@ export default function Home() {
               <div key={index}>
                 {PlayerArray[index] ? (
                   <PlayerCard
-                    name={PlayerArray[index].name}
-                    age={PlayerArray[index].age}
-                    grade={PlayerArray[index].grade}
-                    avatar={PlayerArray[index].avatar}
-                    gameCount={PlayerArray[index].gameCount}
+                    name={PlayerArray[index]?.name}
+                    age={PlayerArray[index]?.age || 0}
+                    grade={PlayerArray[index]?.grade}
+                    avatar={PlayerArray[index]?.avatar}
+                    gameCount={PlayerArray[index]?.gameCount || 0}
                   ></PlayerCard>
                 ) : (
                   <PlayerCard
@@ -104,10 +160,10 @@ export default function Home() {
                   {PlayerArray[index] ? (
                     <PlayerCard
                       name={PlayerArray[index].name}
-                      age={PlayerArray[index].age}
+                      age={PlayerArray[index].age || 0}
                       grade={PlayerArray[index].grade}
                       avatar={PlayerArray[index].avatar}
-                      gameCount={PlayerArray[index].gameCount}
+                      gameCount={PlayerArray[index].gameCount || 0}
                     ></PlayerCard>
                   ) : null}
                 </div>
@@ -147,7 +203,7 @@ export default function Home() {
                 >
                   <PlayerCard
                     name={player.name}
-                    age={player.age}
+                    age={player.age || 0}
                     grade={player.grade}
                     gameCount={4}
                     avatar={player.avatar}
@@ -175,13 +231,13 @@ export default function Home() {
           return (
             <div
               onClick={() => {
-                handlePlayerClick(player);
                 console.log("selected player is ", player);
+                handlePlayerClick(player);
               }}
             >
               <PlayerCard
                 name={player.name}
-                age={player.age}
+                age={player.age || 0}
                 grade={player.grade}
                 gameCount={0}
                 avatar={player.avatar}
