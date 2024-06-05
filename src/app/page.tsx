@@ -70,7 +70,10 @@ export default function Home() {
       });
     fetch("/www/watingBoard")
       .then((response) => response.json())
-      .then((data) => {});
+      .then((data) => {
+        console.log("wating data is ", data);
+        setPlayerArray(data);
+      });
   }, []);
 
   useEffect(() => {

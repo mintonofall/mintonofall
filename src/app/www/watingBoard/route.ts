@@ -1,4 +1,4 @@
-import { Player, SendData } from "@/model/model";
+import { Player, PlayerWithPlace, SendData } from "@/model/model";
 import { NextRequest } from "next/server";
 import db from "../../../../lib/db";
 
@@ -7,12 +7,19 @@ export async function GET(req: NextRequest) {
     const boards = await db.watingBoard.findMany({
         where: { clubId: 1 },
         orderBy: { place: 'asc' },
-        select: { watingPlayer: true }
+        select: { watingPlayer: true, place: true}
     });
-    const newPlayerList:Player[] = []
+    const newPlayerList:any[] = []
     boards.map((player) => {
         if(player.watingPlayer !== null) {
-            newPlayerList.push(player.watingPlayer);
+            const newPlayer = {
+                ...player.watingPlayer,
+                place: player.place
+            }
+            newPlayerList.push(newPlayer);
+        } else {
+            
+            newPlayerList.push(null);
         }
     })
 
