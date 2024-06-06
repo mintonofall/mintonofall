@@ -7,7 +7,7 @@ import Link from "next/link";
 import db from "../../lib/db";
 import CreatePlayer from "./createPlayer";
 import { playerList } from "../../prisma/fakeDatabase";
-import { Player, SendData } from "@/model/model";
+import { Player, SendData, PlayerWithPlaceObj } from "@/model/model";
 import { platform } from "process";
 import { Play } from "next/font/google";
 
@@ -28,6 +28,8 @@ export default function Home() {
   const [showInputPlayer, setShowInputPlayer] = useState([]);
   const [inputPlayer, setInputPlayer] = useState("");
   const [players, setPlayers] = useState<Player[]>([]);
+  const [watingBoardIdx, setWatingBoardIdx] = useState(0);
+  const [watingPointer, setWatingPointer] = useState(0);
   const [PlayingGame, setPlayingGame] = useState<Player[]>(
     Array.from({ length: 16 })
   );
@@ -46,6 +48,35 @@ export default function Home() {
     await setPlayerArray(newArray);
   };
 
+  const pushGame = async (watingPointer: number, index: number) => {
+    fetch("/www/pushGames", {
+      method: "Post",
+      body: JSON.stringify({
+        courtNumber: index,
+        player1Id: PlayerArray[watingPointer * 4]?.id,
+        player2Id: PlayerArray[watingPointer * 4 + 1]?.id,
+        player3Id: PlayerArray[watingPointer * 4 + 2]?.id,
+        player4Id: PlayerArray[watingPointer * 4 + 3]?.id,
+        clubId: PlayerArray[watingPointer * 4]?.clubId,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("push data is ", data);
+      });
+  };
+
+  const isSelected = (watingPointer: number, index: number): Boolean => {
+    if (watingPointer === 0 && index < 4) {
+      return true;
+    }
+    if (watingPointer === 1 && index >= 4 && index < 8 && index > 3) {
+      return true;
+    }
+
+    return false;
+  };
+
   const handlePlayerClick = (player: Player) => {
     fetch("/www/selectedPlayers", {
       method: "POST",
@@ -62,7 +93,31 @@ export default function Home() {
       });
   };
 
+  const sendWatingBoardPlayer = async (index: number) => {
+    fetch("/www/watingBoard", {
+      method: "POST",
+      body: JSON.stringify({
+        playerId: selectedPlayer.id,
+        clubId: selectedPlayer.clubId,
+        place: index,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("wating data is ", data);
+      })
+      .catch((error) => {
+        // Handle any errors here
+      });
+  };
+
   useEffect(() => {
+    fetch("/www/pushGames")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("playingGame datas is ", data);
+        data.map((data: PlayerWithPlaceObj) => {});
+      });
     fetch("/www/players")
       .then((response) => response.json())
       .then((data) => {
@@ -70,47 +125,16 @@ export default function Home() {
       });
     fetch("/www/watingBoard")
       .then((response) => response.json())
-      .then((data) => {
-        console.log("wating data is ", data);
-        setPlayerArray(data);
+      .then((datas) => {
+        console.log("wating List is", datas);
+        const newPlayerArray: Player[] = Array.from({ length: 48 });
+        datas.map((data: PlayerWithPlaceObj) => {
+          newPlayerArray[data.place] = data.watingPlayer!;
+        });
+        console.log("stard wating data is ", newPlayerArray);
+        setPlayerArray(newPlayerArray);
       });
   }, []);
-
-  useEffect(() => {
-    const sendData: SendData[] = [];
-    PlayerArray.map((player, idx) => {
-      if (!player) {
-        const data = {
-          place: idx,
-          clubId: 1,
-          playerId: null,
-        };
-        sendData.push(data);
-      } else {
-        const data = {
-          playerId: player.id,
-          place: idx,
-          clubId: player?.clubId,
-        };
-        sendData.push(data);
-      }
-    });
-    console.log("sendData is ", sendData);
-    fetch("/www/watingBoard", {
-      method: "POST",
-      body: JSON.stringify(sendData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("res data is ", data);
-        // Handle the response data here
-      })
-      .catch((error) => {
-        console.log("error is ", error);
-        // Handle any errors here
-      });
-    localStorage.setItem("PlayerArray", JSON.stringify(PlayerArray));
-  }, [PlayerArray]);
 
   return (
     <div className="flex  flex-row">
@@ -118,19 +142,26 @@ export default function Home() {
         <div className="flex bg-green-400 p-5">
           <div className="grid grid-rows-4 grid-cols-1 w-20">
             {Array.from({ length: 4 }).map((_, index) => (
-              <button key={index}>+</button>
+              <button
+                onClick={() => {
+                  pushGame(watingPointer, index);
+                }}
+                key={index}
+              >
+                +
+              </button>
             ))}
           </div>
           <div className="grid grid-cols-4 grid-rows-4 *:border-2 *:rounded-md gap-2 w-full">
             {Array.from({ length: 16 }).map((_, index) => (
               <div key={index}>
-                {PlayerArray[index] ? (
+                {PlayingGame[index] ? (
                   <PlayerCard
-                    name={PlayerArray[index]?.name}
-                    age={PlayerArray[index]?.age || 0}
-                    grade={PlayerArray[index]?.grade}
-                    avatar={PlayerArray[index]?.avatar}
-                    gameCount={PlayerArray[index]?.gameCount || 0}
+                    name={PlayingGame[index]?.name}
+                    age={PlayingGame[index]?.age || 0}
+                    grade={PlayingGame[index]?.grade}
+                    avatar={PlayingGame[index]?.avatar}
+                    gameCount={PlayingGame[index]?.gameCount || 0}
                   ></PlayerCard>
                 ) : (
                   <PlayerCard
@@ -149,15 +180,28 @@ export default function Home() {
           <div className="flex bg-rose-300 p-5">
             <div className="grid grid-rows-12 grid-cols-1 w-20">
               {Array.from({ length: 12 }).map((_, index) => (
-                <button key={index}>+</button>
+                <div
+                  key={index}
+                  onClick={() => {
+                    setWatingPointer(index);
+                  }}
+                >
+                  <button>+</button>
+                </div>
               ))}
             </div>
             <div className="grid grid-rows-12 grid-cols-4 *:border-2 *:rounded-md gap-2 w-full">
               {Array.from({ length: 48 }).map((_, index) => (
                 <div
                   key={index}
-                  onClick={() => {
+                  className={`${
+                    isSelected(watingPointer, index) ? "bg-orange-400" : ""
+                  }`}
+                  onClick={async () => {
                     seletPlayer(index);
+                    await setWatingBoardIdx(index);
+                    console.log("Board inx is ", watingBoardIdx);
+                    await sendWatingBoardPlayer(index);
                   }}
                 >
                   {PlayerArray[index] ? (

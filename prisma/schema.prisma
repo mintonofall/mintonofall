@@ -26,7 +26,13 @@ model WatingPlayer {
 
 model PlayingGames {
   id          Int      @id @default(autoincrement())
+  clubId      Int
+  club        Club     @relation(fields: [clubId], references: [id])
   courtNumber Int
+  player1Id   Int
+  player2Id   Int
+  player3Id   Int
+  player4Id   Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -54,6 +60,7 @@ model Club {
   waitingBoards  WatingBoard[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+  PlayingGames   PlayingGames[]
 }
 
 model Record {

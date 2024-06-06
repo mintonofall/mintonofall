@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     // const players = playerList;
     const newPlayerList:Player[]= []
    
-    console.log("sever side players: ", players[0]?.watingPlayer);
+    // console.log("sever side players: ", players[0]?.watingPlayer);
     if(!players) {
         return Response.json({ message: 'Player not found' });
     }
@@ -19,6 +19,6 @@ export async function GET(req: NextRequest) {
         newPlayerList.push(player.watingPlayer);
         }
     })
-    console.log("newPlayerList is ", newPlayerList);
+    // console.log("newPlayerList is ", newPlayerList);
     return Response.json(newPlayerList);
 }

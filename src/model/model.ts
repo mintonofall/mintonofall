@@ -1,3 +1,5 @@
+import { Play } from "next/font/google";
+
 export interface Player {
     id: number;
     name: string;
@@ -36,3 +38,17 @@ export interface SendData {
 }
 
 export interface PlayerWithPlace extends Player { place: number; }
+
+export interface PlayerWithPlaceObj {
+    place: number;
+    watingPlayer: Player | null;
+}
+
+export interface PlayingGame {
+    courtNumber: number;
+    player1: Player | null;
+    player2: Player | null;
+    player3: Player | null;
+    player4: Player | null;
+    clubId: number;
+}
